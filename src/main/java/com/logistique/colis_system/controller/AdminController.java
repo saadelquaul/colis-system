@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin")
-public class AdminTransporteurController {
+public class AdminController {
 
     @Autowired
     private TransporteurService transporteurService;
