@@ -39,4 +39,9 @@ public class AdminController {
         transporteurService.deleteTransporteur(id);
         return ResponseEntity.ok().build();
     }
+
+    @PutMapping("/transporteurs/{id}")
+    public ResponseEntity<Transporteur> updateTransporteur(@PathVariable String id, @RequestBody TransporteurDTO dto) {
+        return ResponseEntity.ok(transporteurService.updateTransporteur(id, dto));
+    }
 }
