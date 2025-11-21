@@ -22,7 +22,7 @@ public interface UserRepository extends MongoRepository<User, String> {
 
 
     Page<User> findByActiveTrue(Pageable pageable);
-    
+
     @Query("{ 'role': 'TRANSPORTEUR', 'specialite': ?0 }")
     List<Transporteur> findTransporteursBySpecialite(Specialite specialite);
 
