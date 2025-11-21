@@ -52,4 +52,24 @@ public class TransporteurService {
             );
         }
     }
+
+    public void deleteTransporteur(String id) {
+        userRepository.deleteById(id);
+    }
+
+    public Transporteur updateTransporteur(String id, TransporteurDTO dto) {
+        if(!userRepository.existsById(dto.getId())) {
+            throw new RuntimeException("Transporteur not found");
+        }
+
+        Transporteur transporteur = (Transporteur) userRepository.findById(id).get();
+        transporteur.setLogin(dto.getLogin());
+        if(dto.getPassword() != null && !dto.getPassword().isEmpty()) {
+            transporteur.setPassword(passwordEncoder.encode(dto.getPassword()));
+        }
+        transporteur.setSpecialite(dto.getSpecialite());
+        transporteur.setStatut(dto.getStatut());
+        transporteur.setActive(dto.isActive());
+        return userRepository.save(transporteur);
+    }
 }
