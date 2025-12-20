@@ -27,7 +27,7 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-    // Password Encoder (BCrypt)
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -42,13 +42,14 @@ public class SecurityConfig {
         return authProvider;
     }
 
-    // Authentication Manager (used in Login Controller)
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+    
 
-    // The Security Filter Chain (The Rules)
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
