@@ -23,13 +23,11 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByLogin(login)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + login));
 
-        // Check if account is active
         if (!user.isActive()) {
             throw new UsernameNotFoundException("User account is deactivated");
         }
 
-        // Convert our Mongo "User" to Spring Security's "UserDetails"
-        // We add "ROLE_" prefix because Spring Security expects it by default
+
         return new org.springframework.security.core.userdetails.User(
                 user.getLogin(),
                 user.getPassword(),

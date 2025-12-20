@@ -1,7 +1,7 @@
 package com.logistique.colis_system.controller;
 
-import com.logistique.colis_system.dto.JwtResponse;
-import com.logistique.colis_system.dto.LoginRequest;
+import com.logistique.colis_system.dto.response.JwtResponse;
+import com.logistique.colis_system.dto.request.LoginRequest;
 import com.logistique.colis_system.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
