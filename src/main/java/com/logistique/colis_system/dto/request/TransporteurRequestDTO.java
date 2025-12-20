@@ -1,4 +1,4 @@
-package com.logistique.colis_system.dto;
+package com.logistique.colis_system.dto.request;
 
 
 import com.logistique.colis_system.model.enums.Specialite;
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class TransporteurDTO {
+public class TransporteurRequestDTO {
 
     private String id;
 

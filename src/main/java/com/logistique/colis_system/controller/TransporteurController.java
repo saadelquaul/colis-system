@@ -1,23 +1,25 @@
 package com.logistique.colis_system.controller;
 
-import com.logistique.colis_system.dto.TransporteurDTO;
-import com.logistique.colis_system.model.Transporteur;
+import com.logistique.colis_system.dto.request.TransporteurRequestDTO;
+import com.logistique.colis_system.dto.response.TransporteurResponseDTO;
 import com.logistique.colis_system.model.enums.Specialite;
 import com.logistique.colis_system.service.TransporteurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-@RestController("api/transporteur")
+@RestController
+@RequestMapping("/api/")
 public class TransporteurController {
 
     @Autowired
     private TransporteurService transporteurService;
 
-    @GetMapping
-    public ResponseEntity<Page<Transporteur>> getAllTransporteurs(
+    @GetMapping("admin/transporteur")
+    public ResponseEntity<Page<TransporteurResponseDTO>> getAllTransporteurs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(required = false) Specialite specialite) {
@@ -25,19 +27,19 @@ public class TransporteurController {
         return ResponseEntity.ok(transporteurService.getAllTransporteurs(specialite, PageRequest.of(page, size)));
     }
 
-    @PostMapping
-    public ResponseEntity<Transporteur> createTransporteur(@RequestBody TransporteurDTO dto) {
+    @PostMapping("admin/transporteur")
+    public ResponseEntity<TransporteurResponseDTO> createTransporteur(@RequestBody TransporteurRequestDTO dto) {
         return ResponseEntity.ok(transporteurService.createTransporteur(dto));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTransporteur(@PathVariable String id) {
+    @DeleteMapping("admin/transporteur/{id}")
+    public ResponseEntity<String> deleteTransporteur(@PathVariable String id) {
         transporteurService.deleteTransporteur(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("The Transporteur with the id: " + id + " Deleted Successfully.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Transporteur> updateTransporteur(@PathVariable String id, @RequestBody TransporteurDTO dto) {
+    @PutMapping("admin/transporteur/{id}")
+    public ResponseEntity<TransporteurResponseDTO> updateTransporteur(@PathVariable String id, @RequestBody TransporteurRequestDTO dto) {
         return ResponseEntity.ok(transporteurService.updateTransporteur(id, dto));
     }
 
