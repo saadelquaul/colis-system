@@ -1,4 +1,4 @@
-package com.logistique.colis_system.dto;
+package com.logistique.colis_system.dto.response;
 
 
 import lombok.AllArgsConstructor;

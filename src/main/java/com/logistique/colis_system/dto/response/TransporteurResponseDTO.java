@@ -1,25 +1,25 @@
-package com.logistique.colis_system.dto;
+package com.logistique.colis_system.dto.response;
 
-
+import com.logistique.colis_system.model.enums.Role;
 import com.logistique.colis_system.model.enums.Specialite;
 import com.logistique.colis_system.model.enums.TransporteurStatut;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
-public class TransporteurDTO {
-
+@Builder
+public class TransporteurResponseDTO {
     private String id;
 
-    @NotBlank(message = "Login is required")
     private String login;
 
-    private String password;
-
-    @NotNull(message = "Specialite is required (STANDARD, FRAGILE, FRIGO)")
     private Specialite specialite;
 
     private TransporteurStatut statut;
-    private boolean active;
+
+    private Role role;
+
+    private boolean isActive;
 }

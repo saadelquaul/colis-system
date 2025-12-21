@@ -1,5 +1,6 @@
 package com.logistique.colis_system.security;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -23,48 +24,44 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
+        final String authHeader = request.getHeader("Authorization");
 
-        // Get the "Authorization" header
-        String authHeader = request.getHeader("Authorization");
-        String token = null;
-        String username = null;
-
-        // Check if header starts with "Bearer"
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7); // Remove "Bearer " prefix
-            try {
-                username = jwtService.getUsernameFromToken(token);
-            } catch (Exception e) {
-                logger.error("Could not set user authentication in security context", e);
-            }
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
         }
 
-        //  Validate and set authentication in Spring Context
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        final String token = authHeader.substring(7);
 
-            // Re-validate token signature
-            try {
-                jwtService.validateToken(token);
+        try {
+            DecodedJWT decodedJWT = jwtService.validateToken(token);
+            String username = decodedJWT.getSubject();
 
-                // Create the Authentication Object
+
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities()
+                );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                // "Log the user in" for this request only
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            } catch (Exception e) {
-                logger.error("Token validation failed", e);
             }
+
+        } catch (Exception e) {
+            logger.error("JWT Authentication failed: " + e.getMessage());
         }
 
-        // Continue the filter chain
+
         filterChain.doFilter(request, response);
     }
 }
