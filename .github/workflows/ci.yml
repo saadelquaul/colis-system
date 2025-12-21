@@ -7,9 +7,19 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # JOB 1: Build and Test the Java Application
   build-and-test:
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:latest
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd mongo
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout code
@@ -19,14 +29,11 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: '17'
-          distribution: 'temurin' # Matches our Dockerfile
+          distribution: 'temurin'
           cache: maven
 
-      - name: Run Unit Tests with Maven
-        run: mvn clean test
-
-      - name: Build JAR package
-        run: mvn package -DskipTests
+      - name: Build and Test with Maven
+        run: mvn clean package -Dspring.data.mongodb.uri=mongodb://localhost:27017/test_db
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
@@ -34,17 +41,14 @@ jobs:
           name: colis-system-jar
           path: target/*.jar
 
-  # JOB 2: Verify Docker Image Build
   docker-build:
-    needs: build-and-test # Only run if tests pass
+    needs: build-and-test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-
       - name: Build Docker Image
         uses: docker/build-push-action@v5
         with:
