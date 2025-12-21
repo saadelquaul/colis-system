@@ -14,7 +14,7 @@ public interface ColisRepository extends MongoRepository<Colis, String> {
 
     List<Colis> findByAssigneA_Id(String transporteurId);
 
-    List<Colis> findByAdresseDestinationContaining(String destination);
+    List<Colis> findByAddressDestinationContaining(String addressDestination);
 
     List<Colis> findByStatut(ColisStatut statut);
 
