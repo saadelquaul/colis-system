@@ -9,7 +9,7 @@ import lombok.Data;
 @Builder
 public class ColisRequestDTO {
     private Double poids;
-    private String adresseDestination;
+    private String addresseDestination;
     private Specialite type; // STANDARD, FRAGILE, FRIGO
     private ColisStatut statut;
 

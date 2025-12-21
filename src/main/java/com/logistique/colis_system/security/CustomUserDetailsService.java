@@ -3,6 +3,7 @@ package com.logistique.colis_system.security;
 import com.logistique.colis_system.model.User;
 import com.logistique.colis_system.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with login: " + login));
 
         if (!user.isActive()) {
-            throw new UsernameNotFoundException("User account is deactivated");
+            throw new DisabledException("User account is deactivated");
         }
 
 
