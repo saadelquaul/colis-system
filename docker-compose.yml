@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/colis_db
+      - JWT_SECRET=VotreSuperSecretTresLongEtSecurise123456789
+      - JWT_EXPIRATION=86400000
+    depends_on:
+      - mongodb
+
+volumes:
+  mongo-data:
