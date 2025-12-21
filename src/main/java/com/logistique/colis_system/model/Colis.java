@@ -16,7 +16,7 @@ public abstract class Colis {
     private String id;
 
     private double poids;
-    private String addressDestination;
+    private String addresseDestination;
     private ColisStatut statut;
 
     private Specialite typeColis;
